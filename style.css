@@ -330,14 +330,27 @@ svg { display: block; }
 .note-memo::placeholder { color: var(--outline); }
 
 /* ---------- [style-stocks] ---------- */
+.stocks-live-status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--on-variant); margin-bottom: 14px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--outline); flex-shrink: 0; }
+.stocks-live-status.live .live-dot { background: var(--up); animation: live-pulse 1.6s ease-in-out infinite; }
+.stocks-live-status.error .live-dot { background: var(--secondary); }
+@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.stocks-refresh-btn { margin-left: auto; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: none; color: var(--on-variant); cursor: pointer; border-radius: 50%; }
+.stocks-refresh-btn:hover { background: var(--surface-card); color: var(--on-surface); }
+.stocks-refresh-btn.spinning svg { animation: live-spin 0.8s linear infinite; }
+@keyframes live-spin { to { transform: rotate(360deg); } }
+
 .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-md); }
-.stock-card { background: var(--surface-card); border: none; border-radius: var(--r-card); padding: 16px; box-shadow: var(--shadow-card); }
+.stock-card { background: var(--surface-card); border: none; border-radius: var(--r-card); padding: 16px; box-shadow: var(--shadow-card); transition: opacity 0.2s; }
+.stock-card.loading { opacity: 0.55; }
 .stock-name { font-size: 15px; font-weight: 700; color: var(--on-surface); }
 .stock-sector { font-size: 13px; color: var(--on-variant); margin-bottom: var(--sp-sm); }
+.stock-price { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 18px; font-weight: 600; color: var(--on-surface); margin-top: 2px; }
 .spark { width: 100%; height: 40px; margin: 10px 0 8px; }
 .stock-change { font-size: 14px; font-weight: 700; }
 .stock-change.up { color: var(--up); }
 .stock-change.down { color: var(--down); }
+.stock-stale { font-size: 11px; color: var(--secondary); margin-top: 4px; }
 .disclaimer-inline { margin-top: var(--sp-md); font-size: 13px; color: var(--outline); line-height: 1.6; }
 
 /* ---------- [style-disclaimer] ---------- */

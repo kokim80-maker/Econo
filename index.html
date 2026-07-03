@@ -169,6 +169,15 @@
             <button class="chip" data-market="global">해외</button>
           </div>
 
+          <!-- 실시간 갱신 상태 -->
+          <div class="stocks-live-status" id="stocks-live-status">
+            <span class="live-dot" id="stocks-live-dot"></span>
+            <span id="stocks-live-text">실시간 시세 불러오는 중…</span>
+            <button class="stocks-refresh-btn" id="stocks-refresh-btn" aria-label="시세 새로고침">
+              <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+          </div>
+
           <div id="stocks-list"><!-- JS: 종목 카드 --></div>
 
           <footer class="disclaimer-inline">

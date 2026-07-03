@@ -271,23 +271,121 @@ const DATA = {
       desc: '미 연준의 금리 결정. 점도표와 파월 의장 기자회견이 글로벌 증시를 흔듭니다.' },
   ],
 
-  // ⑤ 업종·종목 (교육용 · 과거 흐름 스파크라인)
+  // ⑤ 업종·종목 (실시간 시세 연동 · 최초 표시용 참고값 + 과거 흐름 스파크라인)
+  // status: 'idle'(최초, 아직 미조회) · 'loading' · 'live'(실시간 조회 성공) · 'error'(조회 실패, 참고값 유지)
   stocks: {
     domestic: [
-      { name: '삼성전자', sector: '반도체', change: 1.2, series: [69,70,68,71,72,71,73,74,73,75,76,77] },
-      { name: 'SK하이닉스', sector: '반도체', change: 3.4, series: [180,183,181,188,190,195,193,200,205,210,208,215] },
-      { name: 'LG에너지솔루션', sector: '2차전지', change: -0.8, series: [420,418,415,410,412,408,405,400,402,398,395,392] },
-      { name: 'KB금융', sector: '금융', change: 0.5, series: [72,72,73,73,74,74,73,74,75,75,76,76] },
-      { name: '현대차', sector: '자동차', change: -0.3, series: [245,244,246,243,242,244,241,240,242,239,240,239] },
+      { name: '삼성전자', sector: '반도체', symbol: '005930.KS', price: null, change: 1.2, series: [69,70,68,71,72,71,73,74,73,75,76,77], status: 'idle' },
+      { name: 'SK하이닉스', sector: '반도체', symbol: '000660.KS', price: null, change: 3.4, series: [180,183,181,188,190,195,193,200,205,210,208,215], status: 'idle' },
+      { name: 'LG에너지솔루션', sector: '2차전지', symbol: '373220.KS', price: null, change: -0.8, series: [420,418,415,410,412,408,405,400,402,398,395,392], status: 'idle' },
+      { name: 'KB금융', sector: '금융', symbol: '105560.KS', price: null, change: 0.5, series: [72,72,73,73,74,74,73,74,75,75,76,76], status: 'idle' },
+      { name: '현대차', sector: '자동차', symbol: '005380.KS', price: null, change: -0.3, series: [245,244,246,243,242,244,241,240,242,239,240,239], status: 'idle' },
     ],
     global: [
-      { name: 'NVIDIA', sector: 'AI 반도체', change: 2.7, series: [118,120,119,125,128,130,127,135,140,138,145,150] },
-      { name: 'Apple', sector: 'IT', change: 0.4, series: [210,211,209,212,213,212,214,213,215,216,215,217] },
-      { name: 'Microsoft', sector: '클라우드', change: 1.1, series: [440,442,438,445,448,446,450,452,451,455,458,462] },
-      { name: 'Tesla', sector: '전기차', change: -1.6, series: [250,248,252,245,243,240,238,235,237,232,230,228] },
+      { name: 'NVIDIA', sector: 'AI 반도체', symbol: 'NVDA', price: null, change: 2.7, series: [118,120,119,125,128,130,127,135,140,138,145,150], status: 'idle' },
+      { name: 'Apple', sector: 'IT', symbol: 'AAPL', price: null, change: 0.4, series: [210,211,209,212,213,212,214,213,215,216,215,217], status: 'idle' },
+      { name: 'Microsoft', sector: '클라우드', symbol: 'MSFT', price: null, change: 1.1, series: [440,442,438,445,448,446,450,452,451,455,458,462], status: 'idle' },
+      { name: 'Tesla', sector: '전기차', symbol: 'TSLA', price: null, change: -1.6, series: [250,248,252,245,243,240,238,235,237,232,230,228], status: 'idle' },
     ],
   },
 };
+
+/* =============================================================================
+   [live] 실시간 시세 연동 — Yahoo Finance 비공식 엔드포인트를 CORS 프록시로 호출
+   (별도 백엔드/키 없이 정적 페이지에서 동작 · 프록시 장애 시 마지막 참고값 유지)
+   ============================================================================= */
+const STOCKS_REFRESH_MS = 60 * 1000;
+
+const CORS_PROXIES = [
+  target => `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
+  target => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
+];
+
+const PROXY_TIMEOUT_MS = 8000;
+
+/* 종목 전체를 한 번의 요청으로 조회 (심볼별 개별 호출 대비 훨씬 빠름) */
+async function fetchAllQuotesRaw(symbols) {
+  const target = `https://query1.finance.yahoo.com/v8/finance/spark?symbols=${encodeURIComponent(symbols.join(','))}&range=1mo&interval=1d`;
+  let lastErr;
+  for (const wrap of CORS_PROXIES) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
+    try {
+      const res = await fetch(wrap(target), { cache: 'no-store', signal: controller.signal });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json || typeof json !== 'object') throw new Error('빈 응답');
+      return json;
+    } catch (e) { lastErr = e; }
+    finally { clearTimeout(timer); }
+  }
+  throw lastErr || new Error('시세 조회 실패');
+}
+
+let stocksFetching = false;
+async function refreshStocks() {
+  if (stocksFetching) return;
+  stocksFetching = true;
+  setStocksLiveStatus('loading');
+
+  const allStocks = [...DATA.stocks.domestic, ...DATA.stocks.global];
+  allStocks.forEach(st => { st.status = 'loading'; });
+  renderStocks();
+
+  try {
+    const raw = await fetchAllQuotesRaw(allStocks.map(st => st.symbol));
+    allStocks.forEach(st => {
+      const d = raw[st.symbol];
+      const closes = ((d && d.close) || []).filter(v => typeof v === 'number');
+      if (closes.length < 2) { st.status = st.status === 'live' ? 'live' : 'error'; return; }
+      const price = closes[closes.length - 1];
+      const prevClose = closes[closes.length - 2];
+      st.price = price;
+      st.change = ((price - prevClose) / prevClose) * 100;
+      st.series = closes.slice(-12);
+      st.status = 'live';
+    });
+  } catch (e) {
+    allStocks.forEach(st => { if (st.status !== 'live') st.status = 'error'; });
+  }
+
+  const anyLive = allStocks.some(st => st.status === 'live');
+  DATA.stocksUpdatedAt = new Date();
+  setStocksLiveStatus(anyLive ? 'live' : 'error');
+  renderStocks();
+  stocksFetching = false;
+}
+
+function setStocksLiveStatus(mode) {
+  const box = $('#stocks-live-status');
+  if (!box) return;
+  box.classList.remove('live', 'error');
+  const btn = $('#stocks-refresh-btn');
+  if (mode === 'loading') {
+    btn && btn.classList.add('spinning');
+    $('#stocks-live-text').textContent = '실시간 시세 불러오는 중…';
+  } else {
+    btn && btn.classList.remove('spinning');
+    box.classList.add(mode === 'live' ? 'live' : 'error');
+    const time = DATA.stocksUpdatedAt
+      ? DATA.stocksUpdatedAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      : '-';
+    $('#stocks-live-text').textContent = mode === 'live'
+      ? `실시간 시세 · ${time} 업데이트`
+      : `실시간 조회 실패 · 참고 시세로 표시 중 (${time})`;
+  }
+}
+
+let stocksTimer = null;
+function startStocksAutoRefresh() {
+  refreshStocks();
+  clearInterval(stocksTimer);
+  stocksTimer = setInterval(refreshStocks, STOCKS_REFRESH_MS);
+}
+function stopStocksAutoRefresh() {
+  clearInterval(stocksTimer);
+  stocksTimer = null;
+}
 
 /* =============================================================================
    [store] 상태 저장소 — localStorage 래퍼
@@ -895,12 +993,20 @@ function renderStocks() {
   const items = DATA.stocks[curMarket];
   box.innerHTML = `<div class="stock-grid">` + items.map(st => {
     const up = st.change >= 0;
+    const isDomestic = curMarket === 'domestic';
+    const priceText = typeof st.price === 'number'
+      ? (isDomestic
+          ? `${Math.round(st.price).toLocaleString('ko-KR')}원`
+          : `$${st.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)
+      : '—';
     return `
-      <div class="stock-card">
+      <div class="stock-card ${st.status === 'loading' ? 'loading' : ''}">
         <div class="stock-name">${escapeHtml(st.name)}</div>
         <div class="stock-sector">${escapeHtml(st.sector)}</div>
+        <div class="stock-price">${priceText}</div>
         ${sparkline(st.series, up)}
         <div class="stock-change ${up ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(st.change).toFixed(1)}%</div>
+        ${st.status === 'error' ? '<div class="stock-stale">실시간 조회 실패 · 참고값</div>' : ''}
       </div>`;
   }).join('') + `</div>`;
 }
@@ -911,6 +1017,9 @@ function bindStocks() {
     curMarket = chip.dataset.market;
     $$('#stocks-tabs .chip').forEach(c => c.classList.toggle('active', c === chip));
     renderStocks();
+  });
+  $('#stocks-refresh-btn').addEventListener('click', () => {
+    if (!stocksFetching) refreshStocks();
   });
 }
 
@@ -961,6 +1070,11 @@ function switchView(viewId) {
   $('#page-scroll').scrollTop = 0;
   window.scrollTo(0, 0);
   if (window.speechSynthesis) window.speechSynthesis.cancel(); // 뷰 이동 시 오디오 정지
+
+  // 업종·종목 탭에 머무는 동안만 실시간 시세 자동 갱신
+  if (viewId === 'view-stocks') startStocksAutoRefresh();
+  else stopStocksAutoRefresh();
+
   const hash = viewId.replace('view-', '');
   if (location.hash.slice(1) !== hash) history.replaceState(null, '', '#' + hash);
 }
