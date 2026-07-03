@@ -196,7 +196,7 @@ svg { display: block; }
 /* ---------- [style-hero] 오늘의 학습 요약 — "Daily Insight" 대표 모듈, 페일 민트 틴트로 차별화 ---------- */
 #section-hero { padding-top: var(--sp-lg); }
 #section-hero .hero-card {
-  background: #c8d697; border-radius: var(--r-card); padding: 24px;
+  background: #dce4c1; border-radius: var(--r-card); padding: 24px;
   box-shadow: var(--shadow-card);
 }
 #section-hero .greeting { color: var(--on-primary-fixed-variant); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
