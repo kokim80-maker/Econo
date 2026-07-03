@@ -1,63 +1,70 @@
 /* =============================================================================
    매일 경제 학습 서비스 — 스타일시트
-   디자인 시스템: DESIGN.md (Terra · Organic Design · "Rooted Warmth")
-   원칙: 포레스트 그린=주요액션 · 웜 앰버=하이라이트/배지 · 웜 크림 배경 ·
-         Literata(헤드라인) + Nunito Sans(본문/라벨), 한글 Pretendard 폴백 ·
-         소프트 섀도우·톤 레이어 우선 · 넉넉한 여백 · 큰 라운드(12px)
+   디자인 시스템: DESIGN3.md (Arbor Economics — Warm Minimalist)
+   원칙: 포레스트 그린=주요 액션/브랜드 · 테라코타=하이라이트·2차 액션 ·
+         크림 배경 + 화이트 카드(톤 레이어) · Hanken Grotesk 전 레벨 통일, 한글 Pretendard 폴백 ·
+         그린 틴트의 매우 소프트한 앰비언트 섀도우 · 절제된 라운드(8/16px)
    ============================================================================= */
 
-/* ---------- [style-tokens] 디자인 토큰 ---------- */
+/* ---------- [style-tokens] 디자인 토큰 (DESIGN3 Arbor Economics) ---------- */
 :root {
-  /* 표면 (웜 크림 톤 레이어) */
-  --surface:        #faf6f0;   /* 배경 — 웜 크림 */
-  --surface-card:   #fffdf9;   /* 카드 — 배경보다 살짝 밝은 크림 */
-  --surface-low:    #f3ede2;   /* 오목한 톤(입력창, 인셋) */
-  --surface-mid:    #ece4d5;
-  --surface-high:   #e4dac6;
+  /* 표면 (웜 크림 배경 + 화이트 카드 레이어) */
+  --surface:        #f4f1de;   /* 배경 — 크림/오프화이트 */
+  --surface-card:   #ffffff;   /* 카드 — 화이트 (레이어드 효과) */
+  --surface-low:    #eeeae0;   /* 오목한 톤(입력창, 인셋) */
+  --surface-mid:    #e6e1d2;
+  --surface-high:   #ddd7c4;
 
-  /* 텍스트 (웜 다크 그레이, 순수 검정 배제) */
-  --on-surface:     #2e3230;
-  --on-variant:     #6d6656;   /* 웜 그레이 (옐로우 언더톤) */
-  --outline:        #8c8571;
-  --outline-var:    rgba(46, 50, 48, 0.12);   /* 저채도 헤어라인 */
+  /* 텍스트 (딥 슬레이트 잉크, 웜 그레이 보조) */
+  --on-surface:     #161a32;
+  --on-variant:     #414844;   /* 딥 슬레이트 그레이 (보조 텍스트) */
+  --outline:        #717973;
+  --outline-var:    #e2e2e2;   /* 저채도 헤어라인/보더 */
 
-  /* 브랜드 — 포레스트 그린 (주요 액션·내비) */
-  --primary:        #4a7c59;
-  --on-primary:     #ffffff;
-  --primary-cont:   #35573f;   /* 액센트 텍스트(링크·활성) — 대비 강화용 톤다운 */
-  --primary-tint:   #e6efe6;   /* 칩·태그 연한 틴트 */
-  --primary-fixed:  #dcead9;   /* 히어로 배경 */
-  --on-primary-fixed:#233829;
+  /* 브랜드 — 포레스트 그린 (주요 액션·브랜딩·성공 상태) */
+  --primary:            #012d1d;
+  --on-primary:         #ffffff;
+  --primary-container:  #1b4332;
+  --on-primary-cont:    #86af99;
+  --primary-cont:       #1b4332;   /* 액센트 텍스트(링크·활성) — 화이트/크림 위 대비용 톤 */
+  --primary-tint:       rgba(1, 45, 29, 0.08);   /* 저채도 그린 틴트 */
+  --primary-fixed:      #c1ecd4;   /* 히어로 배경 — 페일 민트 */
+  --primary-fixed-dim:  #a5d0b9;
+  --on-primary-fixed:   #002114;
+  --on-primary-fixed-variant: #274e3d;
 
-  /* 보조 — 웜 앰버 (하이라이트·배지) */
-  --secondary:      #705c30;
-  --secondary-cont: #705c30;
-  --secondary-tint: #efe6d2;
-  --on-secondary-c: #574725;
+  /* 보조 — 테라코타 (하이라이트·CTA 강조·친근한 넛지) */
+  --secondary:        #9a442d;
+  --on-secondary:     #ffffff;
+  --secondary-dark:   #6b2f1f;   /* 버튼 하단 오프셋 섀도우용 */
+  --secondary-cont:   #742814;
+  --secondary-tint:   #ffdbd2;   /* 페일 피치 틴트(배지) */
+  --on-secondary-c:   #742814;
 
-  /* 상태 / 데이터 색 (데사츄레이트, 순색·네온 회피) */
-  --error:  #a13f3f;
-  --up:     #a13f3f;   /* 상승(빨강, 한국식) — 저채도 */
-  --down:   #3f6a8c;   /* 하락(파랑) — 저채도 */
+  /* 상태 / 데이터 색 */
+  --error:  #ba1a1a;
+  --up:     #9a442d;   /* 상승(테라코타=빨강 계열, 한국식) */
+  --down:   #414844;   /* 하락(딥 슬레이트) */
 
-  /* radius — 큰 라운드로 부드럽고 친근하게 */
-  --r-sm: 8px; --r-md: 12px; --r-lg: 12px; --r-card: 12px; --r-xl: 20px; --r-full: 9999px;
+  /* radius — DESIGN3 rounded 스케일 (sm4 · DEFAULT8 · md12 · lg16 · xl24 · full) */
+  --r-sm: 4px; --r-md: 8px; --r-lg: 12px; --r-card: 16px; --r-xl: 24px; --r-full: 9999px;
 
-  /* 간격 4·8·16·24·40 — 넉넉하고 여유로운 리듬 */
+  /* 간격 4·8·16·24·40 — 넉넉하고 여유로운 리듬 (DESIGN3 spacing과 동일) */
   --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-section: 40px;
   --sp-page: 20px;
 
-  /* 그림자 — 매우 소프트한 그림자만 사용 (톤 레이어 우선) */
-  --shadow-card: 0 4px 20px rgba(46, 50, 48, 0.06);
-  --shadow-btn:  0 4px 20px rgba(46, 50, 48, 0.06);
-  --shadow-soft: 0 6px 24px rgba(46, 50, 48, 0.08);
+  /* 그림자 — 포레스트 그린 틴트의 매우 소프트한 섀도우, 버튼은 4px 오프셋 탁틸 섀도우 */
+  --shadow-card: 0 4px 12px rgba(1, 45, 29, 0.05);
+  --shadow-soft: 0 6px 24px rgba(1, 45, 29, 0.08);
+  --shadow-btn-primary:   0 4px 0 #001a10;
+  --shadow-btn-secondary: 0 4px 0 var(--secondary-dark);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ---------- [style-base] 기본 타이포·배경 ---------- */
 body {
-  font-family: 'Nunito Sans', 'Pretendard Variable', Pretendard, ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, ui-sans-serif, system-ui, sans-serif;
   background: var(--surface);
   color: var(--on-surface);
   -webkit-font-smoothing: antialiased;
@@ -80,36 +87,38 @@ svg { display: block; }
 .ico-20 { width: 20px; height: 20px; }
 .ico-24 { width: 24px; height: 24px; }
 
-/* ---------- [style-typography] 타이포 ---------- */
-/* Literata(세리프) — 헤드라인 / Nunito Sans — 본문·라벨, 넉넉한 행간(1.6+) */
-.section-headline { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 24px; font-weight: 600; line-height: 1.4; letter-spacing: -0.005em; }
-.editorial-title  { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 18px; font-weight: 600; line-height: 1.5; }
-.body             { font-size: 16px; font-weight: 400; line-height: 1.65; }
+/* ---------- [style-typography] 타이포 (Hanken Grotesk 전 레벨 통일) ---------- */
+/* headline-md(24/32) — 섹션 타이틀 / headline-lg-mobile(28/34) — 히어로·용어 등 강조 앵커 */
+.section-headline { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 24px; font-weight: 600; line-height: 32px; letter-spacing: -0.01em; }
+.headline-anchor  { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 28px; font-weight: 600; line-height: 34px; letter-spacing: -0.01em; }
+.editorial-title  { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 18px; font-weight: 600; line-height: 1.5; }
+.body             { font-size: 16px; font-weight: 400; line-height: 24px; }
 .caption          { font-size: 14px; font-weight: 400; line-height: 1.6; color: var(--on-variant); }
 
 /* ---------- [style-buttons] 버튼 ---------- */
-/* 1차 CTA — 솔리드 포레스트 그린, 큰 라운드(12px), 소프트 섀도우 */
+/* 1차 CTA — 솔리드 포레스트 그린, 8px 라운드, 4px 하단 오프셋 탁틸 섀도우 */
 .btn-primary {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   width: 100%; height: 52px;
   background: var(--primary); color: var(--on-primary); border: none;
-  border-radius: var(--r-md); box-shadow: var(--shadow-btn);
-  font: 700 16px inherit; font-family: 'Nunito Sans', inherit; cursor: pointer;
+  border-radius: var(--r-md); box-shadow: var(--shadow-btn-primary);
+  font: 700 16px inherit; font-family: 'Hanken Grotesk', inherit; cursor: pointer;
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
-.btn-primary:hover { box-shadow: var(--shadow-soft); }
-.btn-primary:active { transform: translateY(1px); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-primary:active { transform: translateY(4px); box-shadow: none; }
 
-/* 2차 CTA — 크림 배경 + 그린 텍스트 + 얇은 테두리 */
+/* 2차 CTA — 솔리드 테라코타, 하이라이트/넛지 액션 */
 .btn-outline {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   width: 100%; height: 48px;
-  background: var(--surface-card); color: var(--primary);
-  border: 1px solid var(--primary); border-radius: var(--r-md);
-  font: 700 15px inherit; font-family: 'Nunito Sans', inherit; cursor: pointer;
-  transition: background 150ms ease;
+  background: var(--secondary); color: var(--on-secondary);
+  border: none; border-radius: var(--r-md); box-shadow: var(--shadow-btn-secondary);
+  font: 700 15px inherit; font-family: 'Hanken Grotesk', inherit; cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
-.btn-outline:hover { background: var(--primary-tint); }
+.btn-outline:hover { filter: brightness(1.06); }
+.btn-outline:active { transform: translateY(4px); box-shadow: none; }
 
 /* 텍스트 링크형 — 포레스트 그린 액센트 */
 .link-more {
@@ -118,11 +127,11 @@ svg { display: block; }
   text-decoration: none;
 }
 
-/* ---------- [style-chip] 카테고리/필터 칩 ---------- */
+/* ---------- [style-chip] 카테고리/필터 칩 (프라이머리 라이트 틴트, 보더 없음) ---------- */
 .chip {
   display: inline-flex; align-items: center; height: 36px; padding: 0 16px;
   font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
-  background: var(--primary-tint); color: var(--primary-cont);
+  background: var(--primary-fixed); color: var(--on-primary-fixed-variant);
   border-radius: var(--r-full); border: none; cursor: pointer;
 }
 .chip.active { background: var(--primary); color: var(--on-primary); }
@@ -131,7 +140,7 @@ svg { display: block; }
 .badge {
   display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.03em;
   padding: 3px 10px; border-radius: var(--r-full);
-  background: var(--primary-tint); color: var(--primary-cont);
+  background: var(--primary-fixed); color: var(--on-primary-fixed-variant);
 }
 .badge.original { background: var(--secondary); color: #fff; }        /* 오늘의 단어 */
 .badge.promo    { background: var(--secondary-tint); color: var(--on-secondary-c); }
@@ -156,7 +165,7 @@ svg { display: block; }
 .section-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-md); }
 .section-sub { margin-bottom: var(--sp-md); }
 
-/* 카드 — 웜 크림 필, 12px 라운드, 24px 패딩, 하드 보더 대신 소프트 섀도우 */
+/* 카드 — 화이트 필, 16px 라운드, 24px 패딩, 하드 보더 대신 그린 틴트 소프트 섀도우 */
 .card {
   background: var(--surface-card);
   border: none;
@@ -177,27 +186,58 @@ svg { display: block; }
   border-bottom: 1px solid var(--outline-var);
   position: sticky; top: 0; z-index: 10;
 }
+#section-appbar .brand { display: flex; align-items: center; gap: 8px; }
+#section-appbar .brand-mark { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
 #section-appbar .date { font-size: 12px; color: var(--on-variant); letter-spacing: 0.03em; }
-#section-appbar .logo { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 20px; font-weight: 600; letter-spacing: -0.005em; margin-top: 2px; }
+#section-appbar .logo { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-top: 2px; }
 #section-appbar .actions { display: flex; gap: var(--sp-md); align-items: center; }
 #section-appbar .icon-btn { color: var(--on-surface); background: none; border: none; cursor: pointer; }
 
-/* ---------- [style-hero] 오늘의 학습 요약 ---------- */
+/* ---------- [style-hero] 오늘의 학습 요약 — "Daily Insight" 대표 모듈, 페일 민트 틴트로 차별화 ---------- */
 #section-hero { padding-top: var(--sp-lg); }
 #section-hero .hero-card {
-  background: var(--primary-fixed); border-radius: var(--r-card); padding: 24px;
+  background: #c8d697; border-radius: var(--r-card); padding: 24px;
   box-shadow: var(--shadow-card);
 }
-#section-hero .greeting { color: var(--primary-cont); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+#section-hero .greeting { color: var(--on-primary-fixed-variant); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
 #section-hero .headline { margin: var(--sp-xs) 0 var(--sp-md); color: var(--on-primary-fixed); }
 #section-hero .progress-row { display: flex; gap: 6px; }
-#section-hero .progress-dot { flex: 1; height: 5px; border-radius: var(--r-full); background: rgba(35, 56, 41, 0.16); }
+#section-hero .progress-dot { flex: 1; height: 5px; border-radius: var(--r-full); background: rgba(0, 33, 20, 0.14); }
 #section-hero .progress-dot.done { background: var(--primary); }
-#section-hero .hero-meta { display: flex; justify-content: space-between; margin-top: var(--sp-md); font-size: 14px; color: var(--primary-cont); }
+#section-hero .hero-meta { display: flex; justify-content: space-between; margin-top: var(--sp-md); font-size: 14px; color: var(--on-primary-fixed-variant); }
 #section-hero .hero-meta b { color: var(--on-primary-fixed); font-weight: 700; }
 
-/* ---------- [style-news] 오늘의 뉴스 ---------- */
-#section-news .news-list { display: flex; flex-direction: column; gap: var(--sp-md); }
+/* ---------- [style-news] 오늘의 뉴스 (카드덱) ---------- */
+.news-deck-wrap { position: relative; }
+#section-news .news-stack {
+  position: relative;
+  transition: height 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+#section-news .news-stack .news-item {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  transform-origin: top center;
+  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  touch-action: pan-y;
+  cursor: grab;
+}
+#section-news .news-stack .news-item.dragging { transition: none; cursor: grabbing; }
+#section-news .news-stack .news-item.active { cursor: default; }
+
+.news-deck-nav { display: flex; align-items: center; justify-content: center; gap: var(--sp-md); margin-top: var(--sp-md); }
+.deck-nav-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: var(--r-full);
+  background: var(--surface-card); color: var(--on-surface);
+  border: 1px solid var(--outline-var); box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+.deck-nav-btn:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.news-dots { display: flex; align-items: center; gap: 8px; }
+.news-dots .dot { width: 7px; height: 7px; border-radius: var(--r-full); background: var(--outline-var); border: none; padding: 0; cursor: pointer; transition: all 200ms ease; }
+.news-dots .dot.active { width: 20px; background: var(--primary); }
+
 .news-head { display: flex; gap: var(--sp-sm); align-items: center; margin-bottom: var(--sp-md); }
 .news-title { margin-bottom: var(--sp-md); }
 .news-block { margin-bottom: var(--sp-md); }
@@ -206,9 +246,9 @@ svg { display: block; }
 .news-detail { border-top: 1px solid var(--outline-var); margin-top: var(--sp-md); padding-top: var(--sp-md); }
 .impact-list { margin: 0; padding-left: 18px; }
 .impact-list li { font-size: 16px; line-height: 1.65; color: var(--on-surface); margin-bottom: 4px; }
-.done-flag { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--primary-cont); background: var(--primary-tint); padding: 3px 10px; border-radius: var(--r-full); }
+.done-flag { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--on-primary-fixed-variant); background: var(--primary-fixed); padding: 3px 10px; border-radius: var(--r-full); }
 .tag-row { display: flex; gap: var(--sp-sm); flex-wrap: wrap; margin-top: var(--sp-md); }
-.tag { font-size: 13px; font-weight: 600; color: var(--primary-cont); background: var(--primary-tint); padding: 4px 10px; border-radius: var(--r-full); }
+.tag { font-size: 13px; font-weight: 600; color: var(--on-primary-fixed-variant); background: var(--primary-fixed); padding: 4px 10px; border-radius: var(--r-full); }
 
 .news-toggle {
   display: flex; align-items: center; justify-content: center; gap: 4px;
@@ -220,7 +260,7 @@ svg { display: block; }
 
 .news-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm); margin-top: var(--sp-md); }
 .audio-btn { margin-top: 0; flex: 1 1 100%; }
-.audio-btn.playing { background: var(--secondary); color: #fff; }
+.audio-btn.playing { background: var(--secondary-dark); box-shadow: none; }
 
 .btn-check {
   display: inline-flex; align-items: center; justify-content: center; gap: 5px; flex: 1;
@@ -228,7 +268,7 @@ svg { display: block; }
   background: var(--surface-low); color: var(--on-variant); border: none; border-radius: var(--r-md);
   font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit;
 }
-.btn-check.checked { background: var(--primary-tint); color: var(--primary-cont); }
+.btn-check.checked { background: var(--primary-fixed); color: var(--on-primary-fixed-variant); }
 
 .btn-icon-ghost {
   width: 48px; height: 48px; flex-shrink: 0;
@@ -237,8 +277,8 @@ svg { display: block; }
 }
 .btn-icon-ghost:hover { color: var(--primary-cont); }
 
-/* ---------- [style-term] 오늘의 용어 ---------- */
-#section-term .term-word { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 26px; font-weight: 600; margin: var(--sp-sm) 0; letter-spacing: -0.005em; color: var(--on-surface); }
+/* ---------- [style-term] 오늘의 용어 — 강조 앵커(headline-lg-mobile) ---------- */
+#section-term .term-word { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 28px; font-weight: 600; line-height: 34px; margin: var(--sp-sm) 0; letter-spacing: -0.01em; color: var(--on-surface); }
 #section-term .term-step { margin-top: var(--sp-md); }
 #section-term .term-step-label { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; color: var(--primary-cont); margin-bottom: var(--sp-xs); }
 .term-save { margin-top: var(--sp-lg); }
@@ -248,8 +288,8 @@ svg { display: block; }
 .cal-item { display: flex; gap: var(--sp-md); padding: var(--sp-md) 0; border-bottom: 1px solid var(--outline-var); }
 .cal-item:first-child { padding-top: 0; }
 .cal-item:last-child { border-bottom: none; padding-bottom: 0; }
-.cal-dday { flex-shrink: 0; width: 52px; text-align: center; background: var(--primary-tint); color: var(--primary-cont); border-radius: var(--r-md); padding: 8px 0; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
-.cal-dday.soon { background: var(--secondary-tint); color: var(--secondary); }
+.cal-dday { flex-shrink: 0; width: 52px; text-align: center; background: var(--primary-fixed); color: var(--on-primary-fixed-variant); border-radius: var(--r-md); padding: 8px 0; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.cal-dday.soon { background: var(--secondary-tint); color: var(--secondary-cont); }
 .cal-info .cal-name { font-size: 16px; font-weight: 700; color: var(--on-surface); }
 .cal-type { font-size: 11px; font-weight: 500; color: var(--on-variant); margin-left: 4px; }
 .cal-info .cal-date { font-size: 14px; color: var(--on-variant); margin-top: 2px; }
@@ -267,7 +307,7 @@ svg { display: block; }
 .note-search input::placeholder { color: var(--outline); }
 .note-chips { display: flex; gap: var(--sp-sm); flex-wrap: wrap; margin-bottom: var(--sp-md); }
 
-.subhead { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 18px; font-weight: 600; color: var(--on-surface); margin: var(--sp-section) 0 var(--sp-md); }
+.subhead { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 18px; font-weight: 600; color: var(--on-surface); margin: var(--sp-section) 0 var(--sp-md); }
 
 .ai-box { margin-bottom: var(--sp-md); }
 .ai-title { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: var(--primary-cont); }
@@ -275,7 +315,7 @@ svg { display: block; }
 .ai-input-row { display: flex; gap: var(--sp-sm); }
 .ai-input-row input { flex: 1; border: none; background: var(--surface-low); border-radius: var(--r-md); padding: 0 14px; height: 48px; font-family: inherit; font-size: 15px; color: var(--on-surface); outline: none; }
 .ai-input-row input:focus { box-shadow: 0 0 0 2px var(--primary); }
-.ai-answer { margin-top: var(--sp-md); padding: var(--sp-md); background: var(--primary-tint); border-radius: var(--r-md); font-size: 15px; line-height: 1.65; color: var(--on-surface); }
+.ai-answer { margin-top: var(--sp-md); padding: var(--sp-md); background: var(--primary-fixed); border-radius: var(--r-md); font-size: 15px; line-height: 1.65; color: var(--on-primary-fixed); }
 .ai-list { margin: 8px 0 4px; padding-left: 18px; }
 .ai-list li { margin-bottom: 8px; }
 
@@ -291,7 +331,7 @@ svg { display: block; }
 
 /* ---------- [style-stocks] ---------- */
 .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-md); }
-.stock-card { background: var(--surface-card); border: none; border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow-card); }
+.stock-card { background: var(--surface-card); border: none; border-radius: var(--r-card); padding: 16px; box-shadow: var(--shadow-card); }
 .stock-name { font-size: 15px; font-weight: 700; color: var(--on-surface); }
 .stock-sector { font-size: 13px; color: var(--on-variant); margin-bottom: var(--sp-sm); }
 .spark { width: 100%; height: 40px; margin: 10px 0 8px; }
@@ -308,7 +348,7 @@ svg { display: block; }
 .stat-grid { display: flex; text-align: center; }
 .stat { flex: 1; }
 .stat + .stat { border-left: 1px solid var(--outline-var); }
-.stat-num { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 28px; font-weight: 600; color: var(--primary-cont); }
+.stat-num { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 28px; font-weight: 600; color: var(--primary-cont); }
 .stat-label { font-size: 13px; color: var(--on-variant); margin-top: 2px; }
 .setting-list { padding: 0; }
 .setting-row { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px; border: none; border-bottom: 1px solid var(--outline-var); background: none; font-family: inherit; font-size: 16px; color: var(--on-surface); cursor: pointer; text-align: left; }
@@ -320,7 +360,7 @@ svg { display: block; }
 .empty-state { text-align: center; padding: 48px 20px; color: var(--on-variant); }
 .empty-state.small { padding: 32px 16px; }
 .ico-feature { width: 44px; height: 44px; margin: 0 auto 16px; color: var(--primary-cont); }
-.empty-title { font-family: 'Literata', 'Pretendard Variable', Pretendard, serif; font-size: 18px; font-weight: 600; color: var(--on-surface); margin-bottom: 8px; }
+.empty-title { font-family: 'Hanken Grotesk', 'Pretendard Variable', Pretendard, sans-serif; font-size: 18px; font-weight: 600; color: var(--on-surface); margin-bottom: 8px; }
 .empty-desc { font-size: 15px; line-height: 1.65; }
 
 /* ---------- [style-bottomnav] ---------- */
