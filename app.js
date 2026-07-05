@@ -7,7 +7,7 @@
    ② 오늘의 경제 용어   : 3단 구조 · 내 사전 저장
    ③ 경제 캘린더        : D-day 자동 계산·정렬 · 사전설명 펼침
    ④ 나만의 노트        : 아카이브 · 검색 · 태그필터 · 메모 · AI 질문
-   ⑤ 업종·종목 연결     : 국내/해외 토글 · 미니 스파크라인 · 등락 색상
+   ⑤ 업종·종목 연결     : 국내/해외 토글 · 뉴스·이슈 기반 상위 종목 · 기업정보
    + 진행률/스트릭, 뷰 전환, 설정
    ============================================================================= */
 'use strict';
@@ -271,121 +271,59 @@ const DATA = {
       desc: '미 연준의 금리 결정. 점도표와 파월 의장 기자회견이 글로벌 증시를 흔듭니다.' },
   ],
 
-  // ⑤ 업종·종목 (실시간 시세 연동 · 최초 표시용 참고값 + 과거 흐름 스파크라인)
-  // status: 'idle'(최초, 아직 미조회) · 'loading' · 'live'(실시간 조회 성공) · 'error'(조회 실패, 참고값 유지)
+  // ⑤ 업종·종목 (뉴스·이슈 기반 상위 종목 + 기업정보/핵심 정보)
   stocks: {
     domestic: [
-      { name: '삼성전자', sector: '반도체', symbol: '005930.KS', price: null, change: 1.2, series: [69,70,68,71,72,71,73,74,73,75,76,77], status: 'idle' },
-      { name: 'SK하이닉스', sector: '반도체', symbol: '000660.KS', price: null, change: 3.4, series: [180,183,181,188,190,195,193,200,205,210,208,215], status: 'idle' },
-      { name: 'LG에너지솔루션', sector: '2차전지', symbol: '373220.KS', price: null, change: -0.8, series: [420,418,415,410,412,408,405,400,402,398,395,392], status: 'idle' },
-      { name: 'KB금융', sector: '금융', symbol: '105560.KS', price: null, change: 0.5, series: [72,72,73,73,74,74,73,74,75,75,76,76], status: 'idle' },
-      { name: '현대차', sector: '자동차', symbol: '005380.KS', price: null, change: -0.3, series: [245,244,246,243,242,244,241,240,242,239,240,239], status: 'idle' },
+      { name: '삼성전자', sector: '반도체', code: '005930', issueTag: '실적', issue: 'HBM(고대역폭메모리) 공급 확대 기대감에 2분기 잠정실적 발표를 앞두고 주목받고 있어요.',
+        info: [
+          { label: '주요사업', value: '메모리·시스템반도체, 스마트폰, 가전' },
+          { label: '핵심 포인트', value: '반도체 업황 회복 여부가 실적의 관건' },
+        ] },
+      { name: 'SK하이닉스', sector: '반도체', code: '000660', issueTag: '수급', issue: 'AI 서버용 HBM3E 공급 확대 소식에 외국인 매수세가 몰리고 있어요.',
+        info: [
+          { label: '주요사업', value: 'D램·낸드 메모리 반도체' },
+          { label: '핵심 포인트', value: '글로벌 AI 서버 투자 확대의 최대 수혜주로 거론' },
+        ] },
+      { name: 'LG에너지솔루션', sector: '2차전지', code: '373220', issueTag: '정책', issue: '미국 IRA(인플레이션 감축법) 보조금 정책 변화 이슈로 주가 변동성이 커졌어요.',
+        info: [
+          { label: '주요사업', value: '전기차·ESS용 배터리 셀 제조' },
+          { label: '핵심 포인트', value: '북미 완성차 업체와의 합작공장 진행 상황이 관건' },
+        ] },
+      { name: 'KB금융', sector: '금융', code: '105560', issueTag: '통화정책', issue: '기준금리 동결 기조가 이어지며 은행 순이자마진(NIM) 안정 기대가 부각되고 있어요.',
+        info: [
+          { label: '주요사업', value: '은행·증권·보험을 아우르는 금융지주' },
+          { label: '핵심 포인트', value: '금리 변화에 따른 이자수익 민감도가 높음' },
+        ] },
+      { name: '현대차', sector: '자동차', code: '005380', issueTag: '무역', issue: '미국 관세 정책 이슈와 전기차 수요 둔화 우려가 동시에 거론되고 있어요.',
+        info: [
+          { label: '주요사업', value: '내연기관·전기차 완성차 제조' },
+          { label: '핵심 포인트', value: '북미 현지 생산 비중 확대로 관세 리스크 대응 중' },
+        ] },
     ],
     global: [
-      { name: 'NVIDIA', sector: 'AI 반도체', symbol: 'NVDA', price: null, change: 2.7, series: [118,120,119,125,128,130,127,135,140,138,145,150], status: 'idle' },
-      { name: 'Apple', sector: 'IT', symbol: 'AAPL', price: null, change: 0.4, series: [210,211,209,212,213,212,214,213,215,216,215,217], status: 'idle' },
-      { name: 'Microsoft', sector: '클라우드', symbol: 'MSFT', price: null, change: 1.1, series: [440,442,438,445,448,446,450,452,451,455,458,462], status: 'idle' },
-      { name: 'Tesla', sector: '전기차', symbol: 'TSLA', price: null, change: -1.6, series: [250,248,252,245,243,240,238,235,237,232,230,228], status: 'idle' },
+      { name: 'NVIDIA', sector: 'AI 반도체', symbol: 'NVDA', issueTag: '투자확대', issue: '글로벌 AI 데이터센터 투자 확대의 최대 수혜주로 꾸준히 거론되고 있어요.',
+        info: [
+          { label: '주요사업', value: 'GPU·AI 가속기 설계' },
+          { label: '핵심 포인트', value: 'AI 반도체 시장 점유율 1위' },
+        ] },
+      { name: 'Apple', sector: 'IT', symbol: 'AAPL', issueTag: '실적', issue: '실적 발표를 앞두고 아이폰 판매 전망과 AI 기능 탑재 확대가 주목받고 있어요.',
+        info: [
+          { label: '주요사업', value: '아이폰·맥·서비스(앱스토어 등)' },
+          { label: '핵심 포인트', value: '서비스 부문 매출 성장세가 관전 포인트' },
+        ] },
+      { name: 'Microsoft', sector: '클라우드', symbol: 'MSFT', issueTag: '실적', issue: '클라우드(Azure)와 AI 코파일럿 매출 성장 기대가 이어지고 있어요.',
+        info: [
+          { label: '주요사업', value: '클라우드(Azure)·오피스·AI 서비스' },
+          { label: '핵심 포인트', value: 'OpenAI 협력 기반 AI 사업 확장' },
+        ] },
+      { name: 'Tesla', sector: '전기차', symbol: 'TSLA', issueTag: '수요둔화', issue: '전기차 수요 둔화 우려와 함께 로보택시 사업 진행 상황이 화두예요.',
+        info: [
+          { label: '주요사업', value: '전기차 제조, 에너지 저장·자율주행' },
+          { label: '핵심 포인트', value: '완전자율주행(FSD)·로보택시 상용화 속도가 관건' },
+        ] },
     ],
   },
 };
-
-/* =============================================================================
-   [live] 실시간 시세 연동 — Yahoo Finance 비공식 엔드포인트를 CORS 프록시로 호출
-   (별도 백엔드/키 없이 정적 페이지에서 동작 · 프록시 장애 시 마지막 참고값 유지)
-   ============================================================================= */
-const STOCKS_REFRESH_MS = 60 * 1000;
-
-const CORS_PROXIES = [
-  target => `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
-  target => `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`,
-];
-
-const PROXY_TIMEOUT_MS = 8000;
-
-/* 종목 전체를 한 번의 요청으로 조회 (심볼별 개별 호출 대비 훨씬 빠름) */
-async function fetchAllQuotesRaw(symbols) {
-  const target = `https://query1.finance.yahoo.com/v8/finance/spark?symbols=${encodeURIComponent(symbols.join(','))}&range=1mo&interval=1d`;
-  let lastErr;
-  for (const wrap of CORS_PROXIES) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
-    try {
-      const res = await fetch(wrap(target), { cache: 'no-store', signal: controller.signal });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const json = await res.json();
-      if (!json || typeof json !== 'object') throw new Error('빈 응답');
-      return json;
-    } catch (e) { lastErr = e; }
-    finally { clearTimeout(timer); }
-  }
-  throw lastErr || new Error('시세 조회 실패');
-}
-
-let stocksFetching = false;
-async function refreshStocks() {
-  if (stocksFetching) return;
-  stocksFetching = true;
-  setStocksLiveStatus('loading');
-
-  const allStocks = [...DATA.stocks.domestic, ...DATA.stocks.global];
-  allStocks.forEach(st => { st.status = 'loading'; });
-  renderStocks();
-
-  try {
-    const raw = await fetchAllQuotesRaw(allStocks.map(st => st.symbol));
-    allStocks.forEach(st => {
-      const d = raw[st.symbol];
-      const closes = ((d && d.close) || []).filter(v => typeof v === 'number');
-      if (closes.length < 2) { st.status = st.status === 'live' ? 'live' : 'error'; return; }
-      const price = closes[closes.length - 1];
-      const prevClose = closes[closes.length - 2];
-      st.price = price;
-      st.change = ((price - prevClose) / prevClose) * 100;
-      st.series = closes.slice(-12);
-      st.status = 'live';
-    });
-  } catch (e) {
-    allStocks.forEach(st => { if (st.status !== 'live') st.status = 'error'; });
-  }
-
-  const anyLive = allStocks.some(st => st.status === 'live');
-  DATA.stocksUpdatedAt = new Date();
-  setStocksLiveStatus(anyLive ? 'live' : 'error');
-  renderStocks();
-  stocksFetching = false;
-}
-
-function setStocksLiveStatus(mode) {
-  const box = $('#stocks-live-status');
-  if (!box) return;
-  box.classList.remove('live', 'error');
-  const btn = $('#stocks-refresh-btn');
-  if (mode === 'loading') {
-    btn && btn.classList.add('spinning');
-    $('#stocks-live-text').textContent = '실시간 시세 불러오는 중…';
-  } else {
-    btn && btn.classList.remove('spinning');
-    box.classList.add(mode === 'live' ? 'live' : 'error');
-    const time = DATA.stocksUpdatedAt
-      ? DATA.stocksUpdatedAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-      : '-';
-    $('#stocks-live-text').textContent = mode === 'live'
-      ? `실시간 시세 · ${time} 업데이트`
-      : `실시간 조회 실패 · 참고 시세로 표시 중 (${time})`;
-  }
-}
-
-let stocksTimer = null;
-function startStocksAutoRefresh() {
-  refreshStocks();
-  clearInterval(stocksTimer);
-  stocksTimer = setInterval(refreshStocks, STOCKS_REFRESH_MS);
-}
-function stopStocksAutoRefresh() {
-  clearInterval(stocksTimer);
-  stocksTimer = null;
-}
 
 /* =============================================================================
    [store] 상태 저장소 — localStorage 래퍼
@@ -969,46 +907,45 @@ function runAiQuery() {
 function show(elm, html) { elm.hidden = false; elm.innerHTML = html; }
 
 /* =============================================================================
-   ⑤ 업종·종목 — 국내/해외 · 스파크라인 · 등락
+   ⑤ 업종·종목 — 국내/해외 · 뉴스·이슈 기반 상위 종목 + 기업정보
    ============================================================================= */
 let curMarket = 'domestic';
 
-function sparkline(series, up) {
-  const w = 120, h = 40, pad = 3;
-  const min = Math.min(...series), max = Math.max(...series);
-  const span = (max - min) || 1;
-  const pts = series.map((v, i) => {
-    const x = pad + (i / (series.length - 1)) * (w - pad * 2);
-    const y = pad + (1 - (v - min) / span) * (h - pad * 2);
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-  const color = up ? 'var(--up)' : 'var(--down)';
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
-      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`;
+/* 종목별 실시간 시세 페이지 링크 — 국내는 네이버 금융, 해외는 야후 파이낸스로 새 탭 연결 */
+function stockQuoteUrl(st) {
+  return st.code
+    ? `https://finance.naver.com/item/main.naver?code=${st.code}`
+    : `https://finance.yahoo.com/quote/${st.symbol}`;
 }
 
 function renderStocks() {
   const box = $('#stocks-list');
   const items = DATA.stocks[curMarket];
-  box.innerHTML = `<div class="stock-grid">` + items.map(st => {
-    const up = st.change >= 0;
-    const isDomestic = curMarket === 'domestic';
-    const priceText = typeof st.price === 'number'
-      ? (isDomestic
-          ? `${Math.round(st.price).toLocaleString('ko-KR')}원`
-          : `$${st.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`)
-      : '—';
-    return `
-      <div class="stock-card ${st.status === 'loading' ? 'loading' : ''}">
-        <div class="stock-name">${escapeHtml(st.name)}</div>
-        <div class="stock-sector">${escapeHtml(st.sector)}</div>
-        <div class="stock-price">${priceText}</div>
-        ${sparkline(st.series, up)}
-        <div class="stock-change ${up ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(st.change).toFixed(1)}%</div>
-        ${st.status === 'error' ? '<div class="stock-stale">실시간 조회 실패 · 참고값</div>' : ''}
-      </div>`;
-  }).join('') + `</div>`;
+  box.innerHTML = items.map((st, i) => `
+      <div class="stock-card">
+        <div class="stock-head">
+          <span class="stock-rank">${i + 1}</span>
+          <div class="stock-head-text">
+            <div class="stock-name">${escapeHtml(st.name)}</div>
+            <div class="stock-sector">${escapeHtml(st.sector)}</div>
+          </div>
+          <span class="badge stock-issue-tag">${escapeHtml(st.issueTag)}</span>
+        </div>
+        <p class="body stock-issue">${escapeHtml(st.issue)}</p>
+        <dl class="stock-info-list">
+          ${st.info.map(row => `
+            <div class="stock-info-row">
+              <dt>${escapeHtml(row.label)}</dt>
+              <dd>${escapeHtml(row.value)}</dd>
+            </div>`).join('')}
+        </dl>
+        <a class="stock-price-link" href="${stockQuoteUrl(st)}" target="_blank" rel="noopener noreferrer">
+          <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+          실시간 주가 보기
+          <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg>
+        </a>
+      </div>`
+  ).join('');
 }
 function bindStocks() {
   $('#stocks-tabs').addEventListener('click', e => {
@@ -1017,9 +954,6 @@ function bindStocks() {
     curMarket = chip.dataset.market;
     $$('#stocks-tabs .chip').forEach(c => c.classList.toggle('active', c === chip));
     renderStocks();
-  });
-  $('#stocks-refresh-btn').addEventListener('click', () => {
-    if (!stocksFetching) refreshStocks();
   });
 }
 
@@ -1070,10 +1004,6 @@ function switchView(viewId) {
   $('#page-scroll').scrollTop = 0;
   window.scrollTo(0, 0);
   if (window.speechSynthesis) window.speechSynthesis.cancel(); // 뷰 이동 시 오디오 정지
-
-  // 업종·종목 탭에 머무는 동안만 실시간 시세 자동 갱신
-  if (viewId === 'view-stocks') startStocksAutoRefresh();
-  else stopStocksAutoRefresh();
 
   const hash = viewId.replace('view-', '');
   if (location.hash.slice(1) !== hash) history.replaceState(null, '', '#' + hash);
