@@ -156,12 +156,12 @@
       </div><!-- /#view-note -->
 
       <!-- =================================================================
-           [view-stocks] 업종·종목 연결
+           [view-stocks] 업종·종목 연결 (뉴스·이슈 기반 상위 종목 + 기업정보)
            ================================================================= -->
       <div class="view" id="view-stocks" hidden>
         <section class="section" id="section-stocks">
-          <div class="section-title"><h2 class="section-headline">업종·종목 연결</h2></div>
-          <p class="body caption section-sub">뉴스와 연결된 업종 대표 기업이에요 (교육 목적 · 매수 추천 아님)</p>
+          <div class="section-title"><h2 class="section-headline">오늘의 이슈 종목</h2></div>
+          <p class="body caption section-sub">오늘 뉴스·이슈와 연결된 상위 종목의 기업정보와 핵심 포인트예요 (교육 목적 · 매수 추천 아님)</p>
 
           <!-- 국내/해외 토글 -->
           <div class="note-chips" id="stocks-tabs" style="margin-bottom:16px;">
@@ -169,19 +169,10 @@
             <button class="chip" data-market="global">해외</button>
           </div>
 
-          <!-- 실시간 갱신 상태 -->
-          <div class="stocks-live-status" id="stocks-live-status">
-            <span class="live-dot" id="stocks-live-dot"></span>
-            <span id="stocks-live-text">실시간 시세 불러오는 중…</span>
-            <button class="stocks-refresh-btn" id="stocks-refresh-btn" aria-label="시세 새로고침">
-              <svg class="ico-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            </button>
-          </div>
-
-          <div id="stocks-list"><!-- JS: 종목 카드 --></div>
+          <div id="stocks-list"><!-- JS: 이슈 종목 카드 --></div>
 
           <footer class="disclaimer-inline">
-            ※ 과거 주가 흐름은 교육용 참고 자료이며 미래 수익을 보장하지 않습니다.
+            ※ 소개된 종목은 뉴스·이슈와의 관련성을 기준으로 선정한 교육용 참고 자료이며, 매수·매도를 추천하지 않습니다.
           </footer>
         </section>
       </div><!-- /#view-stocks -->
